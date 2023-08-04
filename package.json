@@ -1,0 +1,63 @@
+{
+  "name": "TestMGS",
+  "author": "CosmicTacoCat",
+  "version": "1.0.0",
+  "keywords": ["pebble-app"],
+  "private": true,
+  "dependencies": {},
+  "pebble": {
+    "displayName": "TestMGS",
+    "uuid": "38757a3e-95fe-4370-9715-51419d197e49",
+    "sdkVersion": "3",
+    "enableMultiJS": true,
+    "targetPlatforms": [
+      "basalt"
+    ],
+    "watchapp": {
+      "watchface": true
+    },
+    "messageKeys": [
+      "dummy"
+    ],
+    "resources": {
+      "media": [
+        {
+          "type": "font",
+          "name": "DS_DIGII_35" ,
+          "file": "ds_digii.tff"
+        },
+        {
+          "type": "font",
+          "name": "DS_DIGII_15",
+          "file": "ds_digii.tff"
+        },
+        {
+          "type": "bitmap",
+          "name": "SNAKE_PROFILE",
+          "file": "snake_profile_pebble.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "MEI_LING_PROFILE",
+          "file": "mei_ling_profile_pebble.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "STEP",
+          "file": "STEP.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "DISTANCE",
+          "file": "DISTANCE.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "CALL",
+          "file": "CALL.png"
+        }
+      ]
+    },
+    "capabilities" : [ "health" ]
+  }
+}
