@@ -12,9 +12,6 @@ static Window *s_window;
 static Layer *canvas;
 //static TextLayer * ptt_layer;
 //static TextLayer * max_layer;
-static TextLayer * time_layer;
-static TextLayer * steps_layer;
-static TextLayer * distance_layer;
 static GBitmap * snake_pic;
 static BitmapLayer * snake_layer;
 static GBitmap * mei_ling_pic;
@@ -26,11 +23,15 @@ static BitmapLayer * DISTANCE_layer;
 static GBitmap * CALL_pic;
 static BitmapLayer * CALL_layer;
 
+#define NUM_LARGE_TEXT 1
+#define NUM_SMALL_TEXT 3
 struct Images *Image_holder;
 struct Texts *Text_holder_large;
 struct Texts *Text_holder_small;
-#define NUM_LARGE_TEXT 1
-#define NUM_SMALL_TEXT 2
+
+// temporary Indices for accessing the text_structs
+#define STEPS 0
+#define DISTANCE 1
 
 // Font variables
 static GFont digital_font_30;
@@ -124,13 +125,13 @@ void set_health_info_text() {
   steps = get_steps();
   static char steps_buffer[7];
   snprintf(steps_buffer, sizeof(steps_buffer), "%d", steps);
-  text_layer_set_text(steps_layer, steps_buffer);
+  //update_text(Text_holder_small->text_array[STEPS], steps_buffer);
 
   int distance_walked = 0;
   distance_walked = get_distance_walked();
   static char distance_buffer[8];
   snprintf(distance_buffer, sizeof(distance_buffer), "%d M", distance_walked);
-  text_layer_set_text(distance_layer, distance_buffer);
+  //update_text(Text_holder_small->text_array[DISTANCE], distance_buffer);
 }
 
 static void update_time() {
@@ -143,7 +144,7 @@ static void update_time() {
   strftime(buffer, sizeof(buffer), clock_is_24h_style() ? "%H:%M" : "%I:%M", tick_time);
 
   // Change the text layer to reflect the current time.
-  text_layer_set_text(time_layer, buffer);
+  //update_text(Text_holder_large->text_array[0], buffer);
 }
 
 // Update the time and health text whenever the time changes (each minute)
@@ -174,6 +175,9 @@ static void window_load(Window *window) {
   Text_holder_large = init_texts_struct(NUM_LARGE_TEXT, GColorBrightGreen, GColorClear, RESOURCE_ID_DS_DIGII_35, window_layer);
   add_text(Text_holder_large, GRect(60, 40, window_bounds.size.w, 50), "00:00", window_layer);
 
+  // Text_holder_small = init_texts_struct(1, GColorBrightGreen, GColorClear, RESOURCE_ID_DS_DIGII_35, window_layer);
+  // add_text(Text_holder_large, GRect(60, 40, window_bounds.size.w, 50), "00:00", window_layer);
+  // add_text(Text_holder_small, GRect(50, 134, 45, 20), "0", window_layer);
 
   // digital_font_30 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_DS_DIGII_35));
   // time_layer = text_layer_create(GRect(60, 40, window_bounds.size.w, 50));
@@ -184,59 +188,59 @@ static void window_load(Window *window) {
   // text_layer_set_text(time_layer, "00:00");
   // layer_add_child(window_layer, text_layer_get_layer(time_layer));
 
-  // steps layer
-  digital_font_15 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_DS_DIGII_15));
-  steps_layer = text_layer_create(GRect(50, 112, 45, 20));
-  text_layer_set_background_color(steps_layer,GColorClear);
-  text_layer_set_text_color(steps_layer, GColorBrightGreen);
-  text_layer_set_font(steps_layer, digital_font_15);
-  text_layer_set_text_alignment(steps_layer, GTextAlignmentLeft);
-  text_layer_set_text(steps_layer, "0");
-  layer_add_child(window_layer, text_layer_get_layer(steps_layer));
+  // // steps layer
+  // digital_font_15 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_DS_DIGII_15));
+  // steps_layer = text_layer_create(GRect(50, 112, 45, 20));
+  // text_layer_set_background_color(steps_layer,GColorClear);
+  // text_layer_set_text_color(steps_layer, GColorBrightGreen);
+  // text_layer_set_font(steps_layer, digital_font_15);
+  // text_layer_set_text_alignment(steps_layer, GTextAlignmentLeft);
+  // text_layer_set_text(steps_layer, "0");
+  // layer_add_child(window_layer, text_layer_get_layer(steps_layer));
 
-  // distance walked layer
-  distance_layer = text_layer_create(GRect(50, 134, 45, 20));
-  text_layer_set_background_color(distance_layer,GColorClear);
-  text_layer_set_text_color(distance_layer, GColorBrightGreen);
-  text_layer_set_font(distance_layer, digital_font_15);
-  text_layer_set_text_alignment(distance_layer, GTextAlignmentLeft);
-  text_layer_set_text(distance_layer, "0");
-  layer_add_child(window_layer, text_layer_get_layer(distance_layer));
+  // // distance walked layer
+  // distance_layer = text_layer_create(GRect(50, 134, 45, 20));
+  // text_layer_set_background_color(distance_layer,GColorClear);
+  // text_layer_set_text_color(distance_layer, GColorBrightGreen);
+  // text_layer_set_font(distance_layer, digital_font_15);
+  // text_layer_set_text_alignment(distance_layer, GTextAlignmentLeft);
+  // text_layer_set_text(distance_layer, "0");
+  // layer_add_child(window_layer, text_layer_get_layer(distance_layer));
 
-  //STEP
-  STEP_pic = gbitmap_create_with_resource(RESOURCE_ID_STEP);
-  STEP_layer = bitmap_layer_create(GRect(50,110,15,5));
-  bitmap_layer_set_compositing_mode(STEP_layer, GCompOpSet);
-  bitmap_layer_set_bitmap(STEP_layer, STEP_pic);
-  layer_add_child(window_layer, bitmap_layer_get_layer(STEP_layer));
+  // //STEP
+  // STEP_pic = gbitmap_create_with_resource(RESOURCE_ID_STEP);
+  // STEP_layer = bitmap_layer_create(GRect(50,110,15,5));
+  // bitmap_layer_set_compositing_mode(STEP_layer, GCompOpSet);
+  // bitmap_layer_set_bitmap(STEP_layer, STEP_pic);
+  // layer_add_child(window_layer, bitmap_layer_get_layer(STEP_layer));
 
-  //DISTANCE
-  DISTANCE_pic = gbitmap_create_with_resource(RESOURCE_ID_DISTANCE);
-  DISTANCE_layer = bitmap_layer_create(GRect(50,132,17,5));
-  bitmap_layer_set_compositing_mode(DISTANCE_layer, GCompOpSet);
-  bitmap_layer_set_bitmap(DISTANCE_layer, DISTANCE_pic);
-  layer_add_child(window_layer, bitmap_layer_get_layer(DISTANCE_layer));
+  // //DISTANCE
+  // DISTANCE_pic = gbitmap_create_with_resource(RESOURCE_ID_DISTANCE);
+  // DISTANCE_layer = bitmap_layer_create(GRect(50,132,17,5));
+  // bitmap_layer_set_compositing_mode(DISTANCE_layer, GCompOpSet);
+  // bitmap_layer_set_bitmap(DISTANCE_layer, DISTANCE_pic);
+  // layer_add_child(window_layer, bitmap_layer_get_layer(DISTANCE_layer));
 
-  //CALL
-  CALL_pic = gbitmap_create_with_resource(RESOURCE_ID_CALL);
-  CALL_layer = bitmap_layer_create(GRect(61,89,22,7));
-  bitmap_layer_set_compositing_mode(CALL_layer, GCompOpSet);
-  bitmap_layer_set_bitmap(CALL_layer, CALL_pic);
-  layer_add_child(window_layer, bitmap_layer_get_layer(CALL_layer));
+  // //CALL
+  // CALL_pic = gbitmap_create_with_resource(RESOURCE_ID_CALL);
+  // CALL_layer = bitmap_layer_create(GRect(61,89,22,7));
+  // bitmap_layer_set_compositing_mode(CALL_layer, GCompOpSet);
+  // bitmap_layer_set_bitmap(CALL_layer, CALL_pic);
+  // layer_add_child(window_layer, bitmap_layer_get_layer(CALL_layer));
 
-  // snake
-  snake_pic = gbitmap_create_with_resource(RESOURCE_ID_SNAKE_PROFILE);
-  snake_layer = bitmap_layer_create(GRect(10,106,32,48));
-  bitmap_layer_set_compositing_mode(snake_layer,GCompOpSet);
-  bitmap_layer_set_bitmap(snake_layer, snake_pic);
-  layer_add_child(window_layer, bitmap_layer_get_layer(snake_layer));
+  // // snake
+  // snake_pic = gbitmap_create_with_resource(RESOURCE_ID_SNAKE_PROFILE);
+  // snake_layer = bitmap_layer_create(GRect(10,106,32,48));
+  // bitmap_layer_set_compositing_mode(snake_layer,GCompOpSet);
+  // bitmap_layer_set_bitmap(snake_layer, snake_pic);
+  // layer_add_child(window_layer, bitmap_layer_get_layer(snake_layer));
 
-  // mei ling
-  mei_ling_pic = gbitmap_create_with_resource(RESOURCE_ID_MEI_LING_PROFILE);
-  mei_ling_layer = bitmap_layer_create(GRect(101,106,32,48));
-  bitmap_layer_set_compositing_mode(mei_ling_layer,GCompOpSet);
-  bitmap_layer_set_bitmap(mei_ling_layer, mei_ling_pic);
-  layer_add_child(window_layer, bitmap_layer_get_layer(mei_ling_layer));
+  // // mei ling
+  // mei_ling_pic = gbitmap_create_with_resource(RESOURCE_ID_MEI_LING_PROFILE);
+  // mei_ling_layer = bitmap_layer_create(GRect(101,106,32,48));
+  // bitmap_layer_set_compositing_mode(mei_ling_layer,GCompOpSet);
+  // bitmap_layer_set_bitmap(mei_ling_layer, mei_ling_pic);
+  // layer_add_child(window_layer, bitmap_layer_get_layer(mei_ling_layer));
 
   Image_holder = init_images_struct(1);
   add_image(Image_holder, GRect(0, 0, 32, 48), RESOURCE_ID_SNAKE_PROFILE, window_layer);
@@ -244,8 +248,6 @@ static void window_load(Window *window) {
 }
 
 static void window_unload(Window *window) {
-  text_layer_destroy(time_layer);
-  text_layer_destroy(steps_layer);
 }
 
 void main_window_create() {
@@ -285,19 +287,19 @@ void main_window_destroy() {
   //destroy_image_struct(test_image);
   de_init_images_struct(Image_holder);
   destroy_texts_struct(Text_holder_large);
-  destroy_texts_struct(Text_holder_small);
+  // destroy_texts_struct(Text_holder_small);
 
-  gbitmap_destroy(snake_pic);
-  gbitmap_destroy(mei_ling_pic);
-  bitmap_layer_destroy(snake_layer);
-  bitmap_layer_destroy(mei_ling_layer);
+  // gbitmap_destroy(snake_pic);
+  // gbitmap_destroy(mei_ling_pic);
+  // bitmap_layer_destroy(snake_layer);
+  // bitmap_layer_destroy(mei_ling_layer);
 
-  gbitmap_destroy(STEP_pic);
-  gbitmap_destroy(DISTANCE_pic);
-  gbitmap_destroy(CALL_pic);
-  bitmap_layer_destroy(STEP_layer);
-  bitmap_layer_destroy(DISTANCE_layer);
-  bitmap_layer_destroy(CALL_layer);
+  // gbitmap_destroy(STEP_pic);
+  // gbitmap_destroy(DISTANCE_pic);
+  // gbitmap_destroy(CALL_pic);
+  // bitmap_layer_destroy(STEP_layer);
+  // bitmap_layer_destroy(DISTANCE_layer);
+  // bitmap_layer_destroy(CALL_layer);
   window_destroy(s_window);
 }
 
