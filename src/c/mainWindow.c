@@ -175,8 +175,8 @@ static void window_load(Window *window) {
   Text_holder_large = init_texts_struct(NUM_LARGE_TEXT, GColorBrightGreen, GColorClear, RESOURCE_ID_DS_DIGII_35, window_layer);
   add_text(Text_holder_large, GRect(60, 40, window_bounds.size.w, 50), "00:00", window_layer);
 
-  // Text_holder_small = init_texts_struct(1, GColorBrightGreen, GColorClear, RESOURCE_ID_DS_DIGII_35, window_layer);
-  // add_text(Text_holder_large, GRect(60, 40, window_bounds.size.w, 50), "00:00", window_layer);
+  Text_holder_small = init_texts_struct(1, GColorBrightGreen, GColorClear, RESOURCE_ID_DS_DIGII_15, window_layer);
+  add_text(Text_holder_small, GRect(50, 112, 45, 20), "00:00", window_layer);
   // add_text(Text_holder_small, GRect(50, 134, 45, 20), "0", window_layer);
 
   // digital_font_30 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_DS_DIGII_35));
@@ -287,7 +287,7 @@ void main_window_destroy() {
   //destroy_image_struct(test_image);
   de_init_images_struct(Image_holder);
   destroy_texts_struct(Text_holder_large);
-  // destroy_texts_struct(Text_holder_small);
+  destroy_texts_struct(Text_holder_small);
 
   // gbitmap_destroy(snake_pic);
   // gbitmap_destroy(mei_ling_pic);
