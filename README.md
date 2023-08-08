@@ -1,9 +1,5 @@
-# MGS_Pebble
-This is my Pebble Time version of preman_pasar's Amazfit Metal Gear Solid watch face.
+# SDK Helper Test App
 
-The signal strength indicator is used to display the Pebble's battery. Each increment represents approximately 
-15 percent of the watch's battery.
+This is my MGS_PEBBLE watchface but I am using it as a testing ground for my Pebble SDK Helper Library.
 
-The user's steps and distance traveled (in meters) metrics are displayed in the lower center portion of the 
-screen.
-
+Image allocation must be done before Text allocation. Probably due to memory being too segmented when doing several of the smaller Text allocations first.
