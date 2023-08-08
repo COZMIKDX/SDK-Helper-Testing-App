@@ -148,30 +148,19 @@ static void window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   GRect window_bounds = layer_get_bounds(window_layer); //This canvas will cover the whole window
 
-  
-
   // Drawing layer init.
   canvas = layer_create(window_bounds);
   layer_set_update_proc(canvas, canvas_update_proc);
   layer_add_child(window_layer, canvas);
 
-  // Setup time layer
-  APP_LOG(APP_LOG_LEVEL_INFO, "Creating large texts struct");
-  uint32_t num_text = 1;
-  Text_holder_large = init_texts_struct(num_text, GColorBrightGreen, GColorClear, RESOURCE_ID_DS_DIGII_35, window_layer);
-  APP_LOG(APP_LOG_LEVEL_INFO, "pushing time text");
-  add_text(Text_holder_large, GRect(60, 40, window_bounds.size.w, 50), "00:00", window_layer);
-
-  APP_LOG(APP_LOG_LEVEL_INFO, "Creating small texts struct");
-  Text_holder_small = init_texts_struct((uint32_t) 2, GColorBrightGreen, GColorClear, RESOURCE_ID_DS_DIGII_15, window_layer);
-  APP_LOG(APP_LOG_LEVEL_INFO, "pushing steps text");
-  add_text(Text_holder_small, GRect(50, 112, 45, 20), "0", window_layer);
-  APP_LOG(APP_LOG_LEVEL_INFO, "pushing distance text");
-  add_text(Text_holder_small, GRect(50, 134, 45, 20), "0", window_layer);
-  APP_LOG(APP_LOG_LEVEL_INFO, "All text pushed!");
-
+  // Images
   APP_LOG(APP_LOG_LEVEL_INFO, "Creating image holding struct");
   Image_holder = init_images_struct((uint32_t) 5);
+  if (Image_holder == NULL)
+  {
+    APP_LOG(APP_LOG_LEVEL_ERROR, "image holder pointer is NULL");
+    return;
+  }
   APP_LOG(APP_LOG_LEVEL_INFO, "pushing snake profile");
   add_image(Image_holder, GRect(10, 106, 32, 48), RESOURCE_ID_SNAKE_PROFILE, window_layer);
   APP_LOG(APP_LOG_LEVEL_INFO, "pushing mei ling profile");
@@ -182,6 +171,31 @@ static void window_load(Window *window) {
   add_image(Image_holder, GRect(50, 132, 17, 5), RESOURCE_ID_DISTANCE, window_layer);
   APP_LOG(APP_LOG_LEVEL_INFO, "pushing call decoration");
   add_image(Image_holder, GRect(61, 89, 22, 7), RESOURCE_ID_CALL, window_layer);
+
+  // Text
+  APP_LOG(APP_LOG_LEVEL_INFO, "Creating large texts struct");
+  uint32_t num_text = 1;
+  Text_holder_large = init_texts_struct(num_text, GColorBrightGreen, GColorClear, RESOURCE_ID_DS_DIGII_35, window_layer);
+  if (Text_holder_large == NULL) {
+    APP_LOG(APP_LOG_LEVEL_ERROR, "Large text holder pointer is NULL");
+    return;
+  }
+  APP_LOG(APP_LOG_LEVEL_INFO, "pushing time text");
+  add_text(Text_holder_large, GRect(60, 40, window_bounds.size.w, 50), "00:00", window_layer);
+
+  APP_LOG(APP_LOG_LEVEL_INFO, "Creating small texts struct");
+  Text_holder_small = init_texts_struct((uint32_t) 2, GColorBrightGreen, GColorClear, RESOURCE_ID_DS_DIGII_15, window_layer);
+  if (Text_holder_small == NULL)
+  {
+    APP_LOG(APP_LOG_LEVEL_ERROR, "Small ext holder pointer is NULL");
+    return;
+  }
+  APP_LOG(APP_LOG_LEVEL_INFO, "pushing steps text");
+  add_text(Text_holder_small, GRect(50, 112, 45, 20), "0", window_layer);
+  APP_LOG(APP_LOG_LEVEL_INFO, "pushing distance text");
+  add_text(Text_holder_small, GRect(50, 134, 45, 20), "0", window_layer);
+  APP_LOG(APP_LOG_LEVEL_INFO, "All text pushed!");
+
 }
 
 static void window_unload(Window *window) {
