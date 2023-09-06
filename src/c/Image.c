@@ -1,7 +1,7 @@
 #include <pebble.h>
 #include "Image.h"
 
-struct Image * init_image(GRect spatial_info, uint32_t resource_id, Layer *window_layer) {
+struct Image * init_image_struct(GRect spatial_info, uint32_t resource_id, Layer *window_layer) {
     struct Image * image_struct = (struct Image *) malloc(sizeof(struct Image));
     if (image_struct == NULL){
         APP_LOG(APP_LOG_LEVEL_ERROR, "Failed to allocate Image struct");

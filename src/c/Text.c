@@ -4,10 +4,10 @@
 // _set_text() docs says it uses a pointer to a string to draw text.
 // So if the screen ever needs to redraw, I'll need the string data around somewhere. 
 // I'll put it in the 
-struct Text * init_text(GRect spatial_info, char * text, GColor text_color, GColor bg_color, GFont font, Layer * window_layer) {
+struct Text * init_text_struct(GRect spatial_info, char * text, GColor text_color, GColor bg_color, GFont font, Layer * window_layer) {
     struct Text * text_struct = (struct Text *) malloc(sizeof(struct Text));
     if (text_struct == NULL)
-    {
+    {x
         APP_LOG(APP_LOG_LEVEL_ERROR, "Failed to allocate Text struct");
         return NULL;
     }

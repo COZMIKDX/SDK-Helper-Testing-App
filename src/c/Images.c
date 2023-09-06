@@ -28,9 +28,9 @@ struct Images * init_images_struct(uint32_t number_of_images) {
 
 void add_image(struct Images *image_list, GRect bounds, uint32_t resource_id, Layer *window_layer)
 {
-    struct Image *image_struct = init_image(bounds, resource_id, window_layer);
+    struct Image *image_struct = init_image_struct(bounds, resource_id, window_layer);
     if (image_struct == NULL){
-        APP_LOG(APP_LOG_LEVEL_ERROR, "init_image returned NULL. Cannot push to array.");
+        APP_LOG(APP_LOG_LEVEL_ERROR, "init_image_struct returned NULL. Cannot push to array.");
         return;
     }
     push_image(image_list, image_struct);
@@ -51,7 +51,7 @@ void push_image(struct Images * image_list, struct Image * input_image) {
 }
 
 // Free what the image struct pointers are pointing at and then free the array holding the pointers.
-void de_init_images_struct(struct Images * image_list) {
+void destroy_images_struct(struct Images * image_list) {
     for (uint32_t i = 0; i < image_list->length; i++) {
         // Destroy the image, the image_struct, and then the pointer to the image struct.
         destroy_image_struct(image_list->image_array[i]);
