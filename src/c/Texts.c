@@ -26,7 +26,7 @@ struct Texts * init_texts_struct(uint32_t number_of_texts, GColor text_color, GC
     return texts_struct;
 }
 
-void add_text(struct Texts * text_list, GRect spatial_info, char * text, Layer * window_layer) {
+struct Text * add_text(struct Texts * text_list, GRect spatial_info, char * text, Layer * window_layer) {
     struct Text * new_text = init_text_struct(spatial_info, text, text_list->text_color, text_list->bg_color, text_list->font, window_layer);
     if (new_text == NULL)
     {
@@ -35,6 +35,7 @@ void add_text(struct Texts * text_list, GRect spatial_info, char * text, Layer *
     }
     push_text(text_list, new_text);
     APP_LOG(APP_LOG_LEVEL_INFO, "new text pushed!");
+    return new_text;
 }
 
 void push_text(struct Texts * text_list, struct Text * input_text) {

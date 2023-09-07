@@ -17,6 +17,8 @@ struct Images *Image_holder;
 struct Texts *Text_holder_large;
 struct Texts *Text_holder_small;
 
+
+
 // temporary Indices for accessing the text_structs
 #define STEPS 0
 #define DISTANCE 1
@@ -199,7 +201,7 @@ static void window_load(Window *window) {
 }
 
 static void window_unload(Window *window) {
-  de_init_images_struct(Image_holder);
+  destroy_images_struct(Image_holder);
   destroy_texts_struct(Text_holder_large);
   destroy_texts_struct(Text_holder_small);
 }
