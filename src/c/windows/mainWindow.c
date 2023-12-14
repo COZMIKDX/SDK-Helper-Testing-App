@@ -155,27 +155,24 @@ static void window_load(Window *window) {
   layer_add_child(window_layer, canvas);
 
   // Images
-  APP_LOG(APP_LOG_LEVEL_INFO, "Creating image holding struct");
+  APP_LOG(APP_LOG_LEVEL_INFO, "Initializing ImageCollection struct");
   image_collection = init_image_collection((uint32_t) 5);
   if (image_collection == NULL)
   {
     APP_LOG(APP_LOG_LEVEL_ERROR, "ImageCollection pointer is NULL");
     return;
   }
-  APP_LOG(APP_LOG_LEVEL_INFO, "pushing snake profile");
+
+  APP_LOG(APP_LOG_LEVEL_INFO, "Pushing images");
   add_image(image_collection, GRect(10, 106, 32, 48), RESOURCE_ID_SNAKE_PROFILE, window_layer);
-  APP_LOG(APP_LOG_LEVEL_INFO, "pushing mei ling profile");
   add_image(image_collection, GRect(101, 106, 32, 48), RESOURCE_ID_MEI_LING_PROFILE, window_layer);
-  APP_LOG(APP_LOG_LEVEL_INFO, "pushing step label");
   add_image(image_collection, GRect(50, 110, 15, 5), RESOURCE_ID_STEP, window_layer);
-  APP_LOG(APP_LOG_LEVEL_INFO, "pushing distance label");
   add_image(image_collection, GRect(50, 132, 17, 5), RESOURCE_ID_DISTANCE, window_layer);
-  APP_LOG(APP_LOG_LEVEL_INFO, "pushing call decoration");
   add_image(image_collection, GRect(61, 89, 22, 7), RESOURCE_ID_CALL, window_layer);
 
   // Text
   // Large Text: Just the time.
-  APP_LOG(APP_LOG_LEVEL_INFO, "Creating large font TextCollection");
+  APP_LOG(APP_LOG_LEVEL_INFO, "Initializing large font TextCollection");
   uint32_t num_text = 1;
   text_collection_large_font = init_text_collection(num_text, GColorBrightGreen, GColorClear, RESOURCE_ID_DS_DIGII_35, window_layer);
   if (text_collection_large_font == NULL) {
@@ -186,16 +183,15 @@ static void window_load(Window *window) {
   time_reference = add_text(text_collection_large_font, GRect(60, 40, window_bounds.size.w, 50), "00:00", window_layer);
 
   // Small Text: health info
-  APP_LOG(APP_LOG_LEVEL_INFO, "Creating small font TextCollection");
+  APP_LOG(APP_LOG_LEVEL_INFO, "Initializing small font TextCollection");
   text_collection_small_font = init_text_collection((uint32_t) 2, GColorBrightGreen, GColorClear, RESOURCE_ID_DS_DIGII_15, window_layer);
   if (text_collection_small_font == NULL)
   {
     APP_LOG(APP_LOG_LEVEL_ERROR, "Small ext holder pointer is NULL");
     return;
   }
-  APP_LOG(APP_LOG_LEVEL_INFO, "pushing steps text");
+  APP_LOG(APP_LOG_LEVEL_INFO, "Pushing small font text");
   add_text(text_collection_small_font, GRect(50, 112, 45, 20), "0", window_layer);
-  APP_LOG(APP_LOG_LEVEL_INFO, "pushing distance text");
   add_text(text_collection_small_font, GRect(50, 134, 45, 20), "0", window_layer);
   APP_LOG(APP_LOG_LEVEL_INFO, "All text pushed!");
 
@@ -205,6 +201,7 @@ static void window_unload(Window *window) {
   destroy_image_collection(image_collection);
   destroy_text_collection(text_collection_large_font);
   destroy_text_collection(text_collection_small_font);
+  APP_LOG(APP_LOG_LEVEL_INFO, "Unload complete. Bye :3");
 }
 
 void main_window_create() {
