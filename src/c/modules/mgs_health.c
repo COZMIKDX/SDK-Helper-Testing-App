@@ -1,5 +1,5 @@
 #include <pebble.h>
-#include "mainWindow.h"
+#include "../windows/mainWindow.h"
 
 
 // checks if we can get step data from the start of the day to right now.

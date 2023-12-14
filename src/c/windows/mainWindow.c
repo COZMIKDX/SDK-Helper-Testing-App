@@ -3,9 +3,9 @@
 
 #include <pebble.h>
 #include "mainWindow.h"
-#include "mgs_health.h"
-#include "Images.h"
-#include "Texts.h"
+#include "../modules/mgs_health.h"
+#include "../modules/ImageCollection.h"
+#include "../modules/TextCollection.h"
 
 // Layer pointers and GBitmap pointers to stick in thin Bitmap Layers
 static Window *s_window;
@@ -13,9 +13,9 @@ static Layer *canvas;
 
 #define NUM_LARGE_TEXT 1
 #define NUM_SMALL_TEXT 3
-struct Images *Image_holder;
-struct Texts *Text_holder_large;
-struct Texts *Text_holder_small;
+struct ImageCollection *image_collection;
+struct TextCollection *text_collection_large_font;
+struct TextCollection *text_collection_small_font;
 struct Text * time_reference;
 
 // temporary Indices for accessing the text_structs
@@ -110,13 +110,13 @@ void set_health_info_text() {
   steps = get_steps();
   static char steps_buffer[7];
   snprintf(steps_buffer, sizeof(steps_buffer), "%d", steps);
-  //update_text(Text_holder_small->text_array[STEPS], steps_buffer);
+  update_text(text_collection_small_font->text_array[STEPS], steps_buffer);
 
   int distance_walked = 0;
   distance_walked = get_distance_walked();
   static char distance_buffer[8];
   snprintf(distance_buffer, sizeof(distance_buffer), "%d M", distance_walked);
-  //update_text(Text_holder_small->text_array[DISTANCE], distance_buffer);
+  update_text(text_collection_small_font->text_array[DISTANCE], distance_buffer);
 }
 
 static void update_time() {
@@ -135,7 +135,7 @@ static void update_time() {
 // Update the time and health text whenever the time changes (each minute)
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   update_time();
-  // set_health_info_text();
+  set_health_info_text();
 }
 
 static void battery_state_handler(BatteryChargeState charge) {
@@ -155,56 +155,53 @@ static void window_load(Window *window) {
   layer_add_child(window_layer, canvas);
 
   // Images
-  APP_LOG(APP_LOG_LEVEL_INFO, "Creating image holding struct");
-  Image_holder = init_images_struct((uint32_t) 5);
-  if (Image_holder == NULL)
+  APP_LOG(APP_LOG_LEVEL_INFO, "Initializing ImageCollection struct");
+  image_collection = init_image_collection((uint32_t) 5);
+  if (image_collection == NULL)
   {
-    APP_LOG(APP_LOG_LEVEL_ERROR, "image holder pointer is NULL");
+    APP_LOG(APP_LOG_LEVEL_ERROR, "ImageCollection pointer is NULL");
     return;
   }
-  APP_LOG(APP_LOG_LEVEL_INFO, "pushing snake profile");
-  add_image(Image_holder, GRect(10, 106, 32, 48), RESOURCE_ID_SNAKE_PROFILE, window_layer);
-  APP_LOG(APP_LOG_LEVEL_INFO, "pushing mei ling profile");
-  add_image(Image_holder, GRect(101, 106, 32, 48), RESOURCE_ID_MEI_LING_PROFILE, window_layer);
-  APP_LOG(APP_LOG_LEVEL_INFO, "pushing step label");
-  add_image(Image_holder, GRect(50, 110, 15, 5), RESOURCE_ID_STEP, window_layer);
-  APP_LOG(APP_LOG_LEVEL_INFO, "pushing distance label");
-  add_image(Image_holder, GRect(50, 132, 17, 5), RESOURCE_ID_DISTANCE, window_layer);
-  APP_LOG(APP_LOG_LEVEL_INFO, "pushing call decoration");
-  add_image(Image_holder, GRect(61, 89, 22, 7), RESOURCE_ID_CALL, window_layer);
+
+  APP_LOG(APP_LOG_LEVEL_INFO, "Pushing images");
+  add_image(image_collection, GRect(10, 106, 32, 48), RESOURCE_ID_SNAKE_PROFILE, window_layer);
+  add_image(image_collection, GRect(101, 106, 32, 48), RESOURCE_ID_MEI_LING_PROFILE, window_layer);
+  add_image(image_collection, GRect(50, 110, 15, 5), RESOURCE_ID_STEP, window_layer);
+  add_image(image_collection, GRect(50, 132, 17, 5), RESOURCE_ID_DISTANCE, window_layer);
+  add_image(image_collection, GRect(61, 89, 22, 7), RESOURCE_ID_CALL, window_layer);
 
   // Text
   // Large Text: Just the time.
-  APP_LOG(APP_LOG_LEVEL_INFO, "Creating large texts struct");
+  APP_LOG(APP_LOG_LEVEL_INFO, "Initializing large font TextCollection");
   uint32_t num_text = 1;
-  Text_holder_large = init_texts_struct(num_text, GColorBrightGreen, GColorClear, RESOURCE_ID_DS_DIGII_35, window_layer);
-  if (Text_holder_large == NULL) {
+  text_collection_large_font = init_text_collection(num_text, GColorBrightGreen, GColorClear, RESOURCE_ID_DS_DIGII_35, window_layer);
+  if (text_collection_large_font == NULL) {
     APP_LOG(APP_LOG_LEVEL_ERROR, "Large text holder pointer is NULL");
     return;
   }
   APP_LOG(APP_LOG_LEVEL_INFO, "pushing time text");
-  time_reference = add_text(Text_holder_large, GRect(60, 40, window_bounds.size.w, 50), "00:00", window_layer);
+  time_reference = add_text(text_collection_large_font, GRect(60, 40, window_bounds.size.w, 50), "00:00", window_layer);
 
   // Small Text: health info
-  APP_LOG(APP_LOG_LEVEL_INFO, "Creating small texts struct");
-  Text_holder_small = init_texts_struct((uint32_t) 2, GColorBrightGreen, GColorClear, RESOURCE_ID_DS_DIGII_15, window_layer);
-  if (Text_holder_small == NULL)
+  APP_LOG(APP_LOG_LEVEL_INFO, "Initializing small font TextCollection");
+  text_collection_small_font = init_text_collection((uint32_t) 2, GColorBrightGreen, GColorClear, RESOURCE_ID_DS_DIGII_15, window_layer);
+  if (text_collection_small_font == NULL)
   {
     APP_LOG(APP_LOG_LEVEL_ERROR, "Small ext holder pointer is NULL");
     return;
   }
-  APP_LOG(APP_LOG_LEVEL_INFO, "pushing steps text");
-  add_text(Text_holder_small, GRect(50, 112, 45, 20), "0", window_layer);
-  APP_LOG(APP_LOG_LEVEL_INFO, "pushing distance text");
-  add_text(Text_holder_small, GRect(50, 134, 45, 20), "0", window_layer);
+  APP_LOG(APP_LOG_LEVEL_INFO, "Pushing small font text");
+  add_text(text_collection_small_font, GRect(50, 112, 45, 20), "0", window_layer);
+  add_text(text_collection_small_font, GRect(50, 134, 45, 20), "0", window_layer);
   APP_LOG(APP_LOG_LEVEL_INFO, "All text pushed!");
 
 }
 
 static void window_unload(Window *window) {
-  destroy_images_struct(Image_holder);
-  destroy_texts_struct(Text_holder_large);
-  destroy_texts_struct(Text_holder_small);
+  destroy_image_collection(image_collection);
+  destroy_text_collection(text_collection_large_font);
+  destroy_text_collection(text_collection_small_font);
+  APP_LOG(APP_LOG_LEVEL_INFO, "Unload complete. Bye :3");
 }
 
 void main_window_create() {
@@ -225,6 +222,7 @@ void main_window_create() {
   update_time();
 
   /*
+  // I think you use this to update anytime you get health updates. I will instead be updating per minute.
   if(!health_service_events_subscribe(health_handler, NULL)) {
     APP_LOG(APP_LOG_LEVEL_ERROR, "Health not available!");
   }
