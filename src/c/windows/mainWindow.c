@@ -3,9 +3,9 @@
 
 #include <pebble.h>
 #include "mainWindow.h"
-#include "mgs_health.h"
-#include "ImageCollection.h"
-#include "TextCollection.h"
+#include "../modules/mgs_health.h"
+#include "../modules/ImageCollection.h"
+#include "../modules/TextCollection.h"
 
 // Layer pointers and GBitmap pointers to stick in thin Bitmap Layers
 static Window *s_window;
