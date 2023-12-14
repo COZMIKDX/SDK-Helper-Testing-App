@@ -4,8 +4,8 @@
 #include <pebble.h>
 #include "mainWindow.h"
 #include "mgs_health.h"
-#include "Images.h"
-#include "Texts.h"
+#include "ImageCollection.h"
+#include "TextCollection.h"
 
 // Layer pointers and GBitmap pointers to stick in thin Bitmap Layers
 static Window *s_window;
@@ -13,9 +13,9 @@ static Layer *canvas;
 
 #define NUM_LARGE_TEXT 1
 #define NUM_SMALL_TEXT 3
-struct Images *Image_holder;
-struct Texts *Text_holder_large;
-struct Texts *Text_holder_small;
+struct ImageCollection *Image_holder;
+struct TextCollection *Text_holder_large;
+struct TextCollection *Text_holder_small;
 struct Text * time_reference;
 
 // temporary Indices for accessing the text_structs
@@ -156,7 +156,7 @@ static void window_load(Window *window) {
 
   // Images
   APP_LOG(APP_LOG_LEVEL_INFO, "Creating image holding struct");
-  Image_holder = init_images_struct((uint32_t) 5);
+  Image_holder = init_image_collection((uint32_t) 5);
   if (Image_holder == NULL)
   {
     APP_LOG(APP_LOG_LEVEL_ERROR, "image holder pointer is NULL");
@@ -175,9 +175,9 @@ static void window_load(Window *window) {
 
   // Text
   // Large Text: Just the time.
-  APP_LOG(APP_LOG_LEVEL_INFO, "Creating large texts struct");
+  APP_LOG(APP_LOG_LEVEL_INFO, "Creating large font TextCollection");
   uint32_t num_text = 1;
-  Text_holder_large = init_texts_struct(num_text, GColorBrightGreen, GColorClear, RESOURCE_ID_DS_DIGII_35, window_layer);
+  Text_holder_large = init_text_collection(num_text, GColorBrightGreen, GColorClear, RESOURCE_ID_DS_DIGII_35, window_layer);
   if (Text_holder_large == NULL) {
     APP_LOG(APP_LOG_LEVEL_ERROR, "Large text holder pointer is NULL");
     return;
@@ -186,8 +186,8 @@ static void window_load(Window *window) {
   time_reference = add_text(Text_holder_large, GRect(60, 40, window_bounds.size.w, 50), "00:00", window_layer);
 
   // Small Text: health info
-  APP_LOG(APP_LOG_LEVEL_INFO, "Creating small texts struct");
-  Text_holder_small = init_texts_struct((uint32_t) 2, GColorBrightGreen, GColorClear, RESOURCE_ID_DS_DIGII_15, window_layer);
+  APP_LOG(APP_LOG_LEVEL_INFO, "Creating small font TextCollection");
+  Text_holder_small = init_text_collection((uint32_t) 2, GColorBrightGreen, GColorClear, RESOURCE_ID_DS_DIGII_15, window_layer);
   if (Text_holder_small == NULL)
   {
     APP_LOG(APP_LOG_LEVEL_ERROR, "Small ext holder pointer is NULL");
@@ -202,9 +202,9 @@ static void window_load(Window *window) {
 }
 
 static void window_unload(Window *window) {
-  destroy_images_struct(Image_holder);
-  destroy_texts_struct(Text_holder_large);
-  destroy_texts_struct(Text_holder_small);
+  destroy_image_collection(Image_holder);
+  destroy_text_collection(Text_holder_large);
+  destroy_text_collection(Text_holder_small);
 }
 
 void main_window_create() {
