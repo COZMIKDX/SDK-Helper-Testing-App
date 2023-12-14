@@ -31,7 +31,7 @@ struct Text * add_text(struct Texts * text_list, GRect spatial_info, char * text
     if (new_text == NULL)
     {
         APP_LOG(APP_LOG_LEVEL_ERROR, "init_text_struct returned NULL. Cannot push to array.");
-        return;
+        return NULL;
     }
     push_text(text_list, new_text);
     APP_LOG(APP_LOG_LEVEL_INFO, "new text pushed!");
