@@ -16,8 +16,7 @@ static Layer *canvas;
 struct Images *Image_holder;
 struct Texts *Text_holder_large;
 struct Texts *Text_holder_small;
-
-
+struct Text * time_reference;
 
 // temporary Indices for accessing the text_structs
 #define STEPS 0
@@ -130,12 +129,12 @@ static void update_time() {
   strftime(buffer, sizeof(buffer), clock_is_24h_style() ? "%H:%M" : "%I:%M", tick_time);
 
   // Change the text layer to reflect the current time.
-  //update_text(Text_holder_large->text_array[0], buffer);
+  update_text(time_reference, buffer);
 }
 
 // Update the time and health text whenever the time changes (each minute)
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
-  // update_time();
+  update_time();
   // set_health_info_text();
 }
 
@@ -175,6 +174,7 @@ static void window_load(Window *window) {
   add_image(Image_holder, GRect(61, 89, 22, 7), RESOURCE_ID_CALL, window_layer);
 
   // Text
+  // Large Text: Just the time.
   APP_LOG(APP_LOG_LEVEL_INFO, "Creating large texts struct");
   uint32_t num_text = 1;
   Text_holder_large = init_texts_struct(num_text, GColorBrightGreen, GColorClear, RESOURCE_ID_DS_DIGII_35, window_layer);
@@ -183,8 +183,9 @@ static void window_load(Window *window) {
     return;
   }
   APP_LOG(APP_LOG_LEVEL_INFO, "pushing time text");
-  add_text(Text_holder_large, GRect(60, 40, window_bounds.size.w, 50), "00:00", window_layer);
+  time_reference = add_text(Text_holder_large, GRect(60, 40, window_bounds.size.w, 50), "00:00", window_layer);
 
+  // Small Text: health info
   APP_LOG(APP_LOG_LEVEL_INFO, "Creating small texts struct");
   Text_holder_small = init_texts_struct((uint32_t) 2, GColorBrightGreen, GColorClear, RESOURCE_ID_DS_DIGII_15, window_layer);
   if (Text_holder_small == NULL)
