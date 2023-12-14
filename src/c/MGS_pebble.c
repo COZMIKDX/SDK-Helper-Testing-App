@@ -1,5 +1,5 @@
 #include <pebble.h>
-#include "mainWindow.h"
+#include "./windows/mainWindow.h"
 
 void init(void) {
   main_window_create();
