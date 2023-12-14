@@ -110,13 +110,13 @@ void set_health_info_text() {
   steps = get_steps();
   static char steps_buffer[7];
   snprintf(steps_buffer, sizeof(steps_buffer), "%d", steps);
-  //update_text(Text_holder_small->text_array[STEPS], steps_buffer);
+  update_text(text_collection_small_font->text_array[STEPS], steps_buffer);
 
   int distance_walked = 0;
   distance_walked = get_distance_walked();
   static char distance_buffer[8];
   snprintf(distance_buffer, sizeof(distance_buffer), "%d M", distance_walked);
-  //update_text(Text_holder_small->text_array[DISTANCE], distance_buffer);
+  update_text(text_collection_small_font->text_array[DISTANCE], distance_buffer);
 }
 
 static void update_time() {
@@ -135,7 +135,7 @@ static void update_time() {
 // Update the time and health text whenever the time changes (each minute)
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   update_time();
-  // set_health_info_text();
+  set_health_info_text();
 }
 
 static void battery_state_handler(BatteryChargeState charge) {
@@ -159,7 +159,7 @@ static void window_load(Window *window) {
   image_collection = init_image_collection((uint32_t) 5);
   if (image_collection == NULL)
   {
-    APP_LOG(APP_LOG_LEVEL_ERROR, "image holder pointer is NULL");
+    APP_LOG(APP_LOG_LEVEL_ERROR, "ImageCollection pointer is NULL");
     return;
   }
   APP_LOG(APP_LOG_LEVEL_INFO, "pushing snake profile");
@@ -225,6 +225,7 @@ void main_window_create() {
   update_time();
 
   /*
+  // I think you use this to update anytime you get health updates. I will instead be updating per minute.
   if(!health_service_events_subscribe(health_handler, NULL)) {
     APP_LOG(APP_LOG_LEVEL_ERROR, "Health not available!");
   }
